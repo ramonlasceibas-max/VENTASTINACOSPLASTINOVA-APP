@@ -32,6 +32,8 @@
         .btn-success:hover { background: #059669; }
         .btn-warning { background: #f59e0b; }
         .btn-warning:hover { background: #d97706; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #991b1b; }
         .btn-small { padding: 0.5rem 1rem; font-size: 0.9rem; }
         .logout-btn { background: #dc2626; }
         .hero { background: white; border-radius: 16px; padding: 4rem 2rem; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -82,6 +84,7 @@
         .info-box { background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #003f7f; }
         .info-box.warning { border-left-color: #f59e0b; background: #fffbeb; }
         .info-box.success { border-left-color: #10b981; background: #f0fdf4; }
+        .info-box.danger { border-left-color: #dc2626; background: #fef2f2; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; overflow-y: auto; }
         .modal.active { display: flex; }
         .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin: auto; }
@@ -106,6 +109,7 @@
         .footer strong { font-size: 1.2rem; }
         .footer a { color: white; text-decoration: underline; }
         .footer-section { margin: 0.8rem 0; }
+        .delete-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; padding: 1rem; background: #fef2f2; border-radius: 8px; border: 2px solid #dc2626; }
         @media (max-width: 768px) { .navbar { flex-direction: column; gap: 1rem; } .hero h1 { font-size: 2rem; } .button-group { flex-direction: column; } .button-group .btn { width: 100%; } .grid-products { grid-template-columns: 1fr; } .dos-columnas, .tres-columnas { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -492,7 +496,7 @@ let carritoCliente = [];
 let clientesGlobal = [];
 let notasFacturas = [];
 let ventas = [];
-let produccionRegistros = []; // NUEVO: Array para registros de producción
+let produccionRegistros = []; // Array para registros de producción
 
 // ==================== FUNCIONES DE NAVEGACIÓN ====================
 function showContent(id) { 
@@ -619,7 +623,7 @@ function cambiarPassword(event) {
     cerrarCambiarPassword(); 
 }
 
-// ==================== FUNCIONES DE CATÁLOGO (continuación del código original...) ====================
+// ==================== FUNCIONES DE CATÁLOGO ====================
 function mostrarCatalogo() { 
     document.getElementById('titulo-cliente').textContent = 'Catálogo de Productos'; 
     document.getElementById('productos-grid').style.display = 'grid'; 
@@ -852,7 +856,7 @@ function realizarPedido(event) {
     mostrarProductos(); 
 }
 
-// ==================== FUNCIONES DE VENDEDOR (código original) ====================
+// ==================== FUNCIONES DE VENDEDOR ====================
 function showVendedorSection(section) { 
     const content = document.getElementById('vendedor-content'); 
     const misClientes = clientesGlobal.filter(c => c.vendedor === usuarioActual.nombre); 
@@ -865,7 +869,6 @@ function showVendedorSection(section) {
         const misPedidos = pedidos.filter(p => p.vendedor === usuarioActual.nombre); 
         content.innerHTML = `<h3 class="section-title">📦 Pedidos Recibidos</h3><div class="table-container"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Tipo</th><th>Total</th><th>Pago</th><th>Fecha</th></tr></thead><tbody>${misPedidos.length === 0 ? '<tr><td colspan="6">No hay pedidos</td></tr>' : misPedidos.map(p => `<tr><td>${p.numero}</td><td>${p.nombre}</td><td>${p.tipoEntrega === 'domicilio' ? '🚚' : p.tipoEntrega === 'tienda' ? '🏪' : '📦'}</td><td>$${p.total}</td><td>${p.metodoPago ? (p.metodoPago === 'efectivo' ? '💵' : '💳') : 'N/A'}</td><td>${p.fecha}</td></tr>`).join('')}</tbody></table></div>`; 
     } else if (section === 'produccion') {
-        // NUEVA SECCIÓN: Producción para vendedores que son técnicos
         showProduccionVendedor();
     } else if (section === 'descuentos') { 
         content.innerHTML = `<h3 class="section-title">🏷️ Proponer Descuento</h3><form onsubmit="proponerDescuento(event)"><div class="form-group"><label>Cliente:</label><select required><option>Seleccionar</option></select></div><div class="dos-columnas"><div class="form-group"><label>Porcentaje:</label><input type="number" min="1" max="100" required></div><div class="form-group"><label>Tipo:</label><select id="desc-tipo" onchange="actualizarProductos()" required><option value="general">General</option><option value="producto">Por Producto</option></select></div></div><div id="prod-descto" style="display:none;">${productos.map(p => `<div class="form-group"><label>${p.nombre}</label><input type="number" min="0" max="100" placeholder="%"></div>`).join('')}</div><div class="form-group"><label>Justificación:</label><textarea required></textarea></div><button type="submit" class="btn">Enviar</button></form>`; 
@@ -964,7 +967,7 @@ function generarFacturaVendedor(event) {
     mostrarNotification(`✅ Factura ${numeroFactura} generada`); 
 }
 
-// ==================== FUNCIONES DE PRODUCCIÓN (NUEVAS) ====================
+// ==================== FUNCIONES DE PRODUCCIÓN (CORREGIDAS) ====================
 function showProduccionVendedor() {
     const content = document.getElementById('vendedor-content');
     const miProduccion = produccionRegistros.filter(r => r.tecnico === usuarioActual.nombre);
@@ -1015,7 +1018,7 @@ function showTecnicoSection(section) {
             <form onsubmit="registrarProduccion(event)" style="max-width: 700px;">
                 <div class="form-group">
                     <label>Producto:</label>
-                    <select id="prod-produccion" required onchange="cargarColoresProduccion()">
+                    <select id="prod-produccion" required>
                         <option value="">Seleccionar producto...</option>
                         ${productosProduccion.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')}
                     </select>
@@ -1053,12 +1056,25 @@ function showTecnicoSection(section) {
             </form>
         `;
         
-        // Agregar listener para mostrar campo de merma
+        // ✅ AGREGAR LISTENERS DESPUÉS DE CREAR EL HTML
         setTimeout(() => {
-            document.getElementById('defectuosos-produccion').addEventListener('input', function() {
-                const container = document.getElementById('merma-container');
-                container.style.display = this.value > 0 ? 'block' : 'none';
-            });
+            const prodSelect = document.getElementById('prod-produccion');
+            const defectuososInput = document.getElementById('defectuosos-produccion');
+            const mermaContainer = document.getElementById('merma-container');
+            
+            if (prodSelect) {
+                prodSelect.addEventListener('change', function() {
+                    cargarColoresProduccion();
+                });
+            }
+            
+            if (defectuososInput) {
+                defectuososInput.addEventListener('input', function() {
+                    if (mermaContainer) {
+                        mermaContainer.style.display = this.value > 0 ? 'block' : 'none';
+                    }
+                });
+            }
         }, 100);
         
     } else if (section === 'mi-produccion') {
@@ -1244,7 +1260,7 @@ function calcularEficiencia(tecnico) {
     return ((totalProducido - totalDefectuosos) / totalProducido * 100).toFixed(1);
 }
 
-// ==================== FUNCIONES DE ADMIN (código original + producción) ====================
+// ==================== FUNCIONES DE ADMIN (PRODUCCIÓN) ====================
 function showAdminSection(section) { 
     const content = document.getElementById('admin-content'); 
     
@@ -1293,6 +1309,15 @@ function showAdminProduccion() {
     
     content.innerHTML = `
         <h3 class="section-title">🏭 Control de Producción</h3>
+        
+        <!-- ✅ BOTONES DE ELIMINACIÓN -->
+        <div class="delete-actions">
+            <strong style="width: 100%; color: #dc2626;">⚠️ ELIMINAR REGISTROS DE PRODUCCIÓN:</strong>
+            <button type="button" class="btn btn-danger btn-small" onclick="eliminarProduccionDia()">❌ Eliminar Hoy</button>
+            <button type="button" class="btn btn-danger btn-small" onclick="eliminarProduccionSemana()">❌ Eliminar Semana</button>
+            <button type="button" class="btn btn-danger btn-small" onclick="eliminarProduccionMes()">❌ Eliminar Mes</button>
+            <button type="button" class="btn btn-danger" onclick="eliminarTodasProduccion()">❌ ELIMINAR TODO</button>
+        </div>
         
         <div class="stats-grid">
             <div class="stat-card success">
@@ -1412,6 +1437,51 @@ function showAdminReportesProduccion() {
             <button type="button" class="btn btn-warning" onclick="descargarReporteProduccionExcelMensual()">📊 Excel Mensual</button>
         </div>
     `;
+}
+
+// ✅ FUNCIONES PARA ELIMINAR PRODUCCIÓN
+function eliminarProduccionDia() {
+    if (!confirm('⚠️ ¿Eliminar registros de HOY?\n\nEsta acción no se puede deshacer.')) return;
+    
+    const hoy = new Date().toLocaleDateString('es-MX');
+    const cantidad = produccionRegistros.filter(r => r.fecha === hoy).length;
+    produccionRegistros = produccionRegistros.filter(r => r.fecha !== hoy);
+    
+    mostrarNotification(`❌ Eliminados ${cantidad} registros de hoy`);
+    showAdminSection('produccion');
+}
+
+function eliminarProduccionSemana() {
+    if (!confirm('⚠️ ¿Eliminar registros de la ÚLTIMA SEMANA?\n\nEsta acción no se puede deshacer.')) return;
+    
+    const hace7Dias = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    const cantidad = produccionRegistros.filter(r => r.timestamp >= hace7Dias).length;
+    produccionRegistros = produccionRegistros.filter(r => r.timestamp < hace7Dias);
+    
+    mostrarNotification(`❌ Eliminados ${cantidad} registros de la semana`);
+    showAdminSection('produccion');
+}
+
+function eliminarProduccionMes() {
+    if (!confirm('⚠️ ¿Eliminar registros del ÚLTIMO MES?\n\nEsta acción no se puede deshacer.')) return;
+    
+    const hace30Dias = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const cantidad = produccionRegistros.filter(r => r.timestamp >= hace30Dias).length;
+    produccionRegistros = produccionRegistros.filter(r => r.timestamp < hace30Dias);
+    
+    mostrarNotification(`❌ Eliminados ${cantidad} registros del mes`);
+    showAdminSection('produccion');
+}
+
+function eliminarTodasProduccion() {
+    if (!confirm('🚨 ¿ELIMINAR TODOS LOS REGISTROS DE PRODUCCIÓN?\n\nEsta acción es IRREVERSIBLE.')) return;
+    if (!confirm('🚨 CONFIRMACIÓN FINAL\n\n¿Estás SEGURO de eliminar TODOS los registros?')) return;
+    
+    const cantidad = produccionRegistros.length;
+    produccionRegistros = [];
+    
+    mostrarNotification(`❌ ELIMINADOS ${cantidad} registros`);
+    showAdminSection('produccion');
 }
 
 function abrirAgregarProducto() { 
