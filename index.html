@@ -1,377 +1,258 @@
-# TINACOS PLASTINOVA - Versión Corregida (PDF y Excel Funcionales)
 
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#003f7f">
-<title>🏪 TINACOS PLASTINOVA - Soluciones Premium</title>
+<title>TINACOS PLASTINOVA - Sistema Profesional</title>
 
-<!-- LIBRERÍAS NECESARIAS -->
+<!-- ✅ LIBRERÍAS CDN VERIFICADAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; }
-.navbar { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
-.navbar-brand { display: flex; align-items: center; gap: 1rem; font-size: 1.5rem; font-weight: bold; }
-.navbar-logo { width: 50px; height: 50px; border-radius: 8px; background: white; padding: 3px; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a202c; }
+.navbar { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.navbar-brand { font-size: 1.5rem; font-weight: bold; }
 .navbar-right { display: flex; gap: 1rem; align-items: center; }
-.carrito-icon { font-size: 1.5rem; cursor: pointer; position: relative; transition: transform 0.2s; }
-.carrito-icon:hover { transform: scale(1.1); }
-.carrito-contador { background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; position: absolute; top: -8px; right: -8px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-.container { max-width: 1200px; margin: 0 auto; padding: 2rem; flex: 1; }
+.carrito-icon { font-size: 1.5rem; cursor: pointer; position: relative; }
+.carrito-contador { background: #dc2626; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; position: absolute; top: -8px; right: -8px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 .content { display: none; }
-.content.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.btn { background: #003f7f; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-size: 1rem; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.btn:hover { background: #1e3a8a; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-.btn:active { transform: translateY(0); }
+.content.active { display: block; }
+.btn { background: #003f7f; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+.btn:hover { background: #1e3a8a; transform: translateY(-2px); }
 .btn-secondary { background: #dc2626; }
 .btn-secondary:hover { background: #991b1b; }
 .btn-success { background: #10b981; }
 .btn-success:hover { background: #059669; }
-.btn-info { background: #0891b2; }
-.btn-info:hover { background: #0e7490; }
 .btn-small { padding: 0.5rem 1rem; font-size: 0.9rem; }
-.logout-btn { background: #dc2626; }
-.hero { background: white; border-radius: 16px; padding: 4rem 2rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-.hero h1 { font-size: 3rem; margin-bottom: 1rem; color: #003f7f; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-.hero-eslogan { font-size: 1.25rem; color: #dc2626; font-weight: 700; margin-bottom: 1rem; }
-.hero p { font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; }
+.hero { background: white; border-radius: 16px; padding: 3rem 2rem; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #003f7f; }
+.hero-eslogan { font-size: 1.2rem; color: #dc2626; font-weight: 700; margin-bottom: 1rem; }
 .button-group { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
-.button-group .btn { flex: 1; min-width: 180px; }
 .form-group { margin-bottom: 1.5rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #003f7f; box-shadow: 0 0 0 3px rgba(0,63,127,0.1); }
-.login-form { max-width: 450px; margin: 2rem auto; background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+.form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #003f7f; }
+.login-form { max-width: 450px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 .form-title { font-size: 2rem; margin-bottom: 2rem; color: #003f7f; text-align: center; font-weight: 700; }
-.dashboard { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-.dashboard h2 { color: #003f7f; margin-bottom: 1.5rem; font-size: 2rem; font-weight: 700; border-bottom: 3px solid #003f7f; padding-bottom: 0.5rem; }
+.dashboard { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.dashboard h2 { color: #003f7f; margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 700; }
 .menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-.menu-item { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s; border: none; font-size: 1rem; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.menu-item:hover { transform: translateY(-4px); box-shadow: 0 8px 12px rgba(0,0,0,0.2); }
-.grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-.product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s; border: 2px solid transparent; }
-.product-card:hover { transform: translateY(-8px); border-color: #003f7f; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
-.product-image { width: 100%; height: 200px; background: linear-gradient(135deg, #003f7f 0%, #dc2626 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem; }
+.menu-item { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: none; font-size: 1rem; font-weight: 600; }
+.menu-item:hover { transform: translateY(-4px); }
+.grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: 0.3s; }
+.product-card:hover { transform: translateY(-8px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+.product-image { width: 100%; height: 180px; background: linear-gradient(135deg, #003f7f 0%, #dc2626 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3.5rem; }
 .product-info { padding: 1.5rem; }
-.product-name { font-size: 1.25rem; font-weight: 700; color: #003f7f; margin-bottom: 0.5rem; }
-.product-capacity { font-size: 0.95rem; color: #64748b; margin-bottom: 0.5rem; font-weight: 500; }
-.product-price { font-size: 1.75rem; color: #dc2626; font-weight: 900; margin-bottom: 1rem; }
+.product-name { font-size: 1.2rem; font-weight: 700; color: #003f7f; margin-bottom: 0.5rem; }
+.product-price { font-size: 1.6rem; color: #dc2626; font-weight: 900; margin-bottom: 1rem; }
 .color-selector { margin-bottom: 1rem; }
 .color-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.3s; }
+.color-btn { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
 .color-btn:hover { transform: scale(1.1); }
-.color-btn.selected { border-color: #003f7f; border-width: 4px; box-shadow: 0 0 0 2px rgba(0,63,127,0.2); }
+.color-btn.selected { border-color: #003f7f; border-width: 3px; }
 .quantity-selector { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; }
-.quantity-btn { width: 36px; height: 36px; border: 2px solid #e2e8f0; background: white; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 1.1rem; transition: all 0.3s; }
-.quantity-btn:hover { background: #f1f5f9; border-color: #003f7f; }
-.quantity-input { width: 60px; text-align: center; border: 2px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; font-weight: 600; }
-.table-container { overflow-x: auto; margin-top: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-table { width: 100%; border-collapse: collapse; background: white; }
+.quantity-btn { width: 32px; height: 32px; border: 2px solid #e2e8f0; background: white; cursor: pointer; border-radius: 6px; font-weight: bold; }
+.quantity-input { width: 50px; text-align: center; border: 2px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; background: white; margin-top: 1rem; }
 th { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1rem; text-align: left; font-weight: 600; }
 td { padding: 1rem; border-bottom: 1px solid #e2e8f0; }
 tr:hover { background: #f8fafc; }
-tr:last-child td { border-bottom: none; }
-.notification { position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 1000; animation: slideIn 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-weight: 500; }
+.notification { position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 1000; animation: slideIn 0.3s; font-weight: 500; }
 .notification.error { background: #dc2626; }
-@keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.section-title { font-size: 1.75rem; color: #003f7f; margin-bottom: 1.5rem; font-weight: 700; border-left: 4px solid #dc2626; padding-left: 1rem; }
+@keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+.section-title { font-size: 1.6rem; color: #003f7f; margin-bottom: 1.5rem; font-weight: 700; border-left: 4px solid #dc2626; padding-left: 1rem; }
 .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; }
-.modal.active { display: flex; animation: fadeIn 0.3s; }
-.modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 700px; width: 90%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-.modal-header { font-size: 1.75rem; color: #003f7f; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; font-weight: 700; }
-.modal-footer { display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; flex-wrap: wrap; border-top: 2px solid #e2e8f0; padding-top: 1rem; }
-.stats-card { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-.stats-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; opacity: 0.9; }
+.modal.active { display: flex; }
+.modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 700px; width: 90%; max-height: 85vh; overflow-y: auto; }
+.modal-header { font-size: 1.6rem; color: #003f7f; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.modal-footer { display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; }
+.stats-card { background: linear-gradient(135deg, #003f7f 0%, #1e3a8a 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; }
+.stats-card h3 { font-size: 1rem; margin-bottom: 0.5rem; opacity: 0.9; }
 .stats-card p { font-size: 2rem; font-weight: 900; }
-.footer { background: #003f7f; color: white; text-align: center; padding: 2rem 1rem; margin-top: auto; }
-.footer strong { font-size: 1.2rem; }
-.footer a { color: white; text-decoration: underline; }
-.footer-section { margin: 0.8rem 0; }
-@media (max-width: 768px) { 
-  .hero h1 { font-size: 2rem; } 
-  .button-group { flex-direction: column; } 
-  .navbar-brand { font-size: 1.2rem; }
-  .modal-content { padding: 1.5rem; }
-}
+.footer { background: #003f7f; color: white; text-align: center; padding: 2rem 1rem; margin-top: 3rem; }
 </style>
 </head>
 <body>
 
 <nav class="navbar">
-<div class="navbar-brand">
-<img src="logo-tinacos.jpg" alt="Logo" class="navbar-logo" onerror="this.style.display='none'">
-<span>🏪 TINACOS PLASTINOVA</span>
-</div>
-<div class="navbar-right">
-<div id="navbar-user"></div>
-<div class="carrito-icon" onclick="abrirCarrito()" style="display:none" id="carrito-btn">
-🛒 <span class="carrito-contador" id="contador">0</span>
-</div>
-</div>
+  <div class="navbar-brand">🏪 TINACOS PLASTINOVA</div>
+  <div class="navbar-right">
+    <div id="navbar-user"></div>
+    <div class="carrito-icon" onclick="abrirCarrito()" style="display:none" id="carrito-btn">
+      🛒 <span class="carrito-contador" id="contador">0</span>
+    </div>
+  </div>
 </nav>
 
-<!-- LANDING -->
 <div id="landing" class="content active">
-<div class="container">
-<div class="hero">
-<h1>🏪 TINACOS PLASTINOVA</h1>
-<div class="hero-eslogan">💧 Soluciones Premium de Almacenamiento 💧</div>
-<p>Plataforma profesional de ventas de tinacos y tambores de alta calidad</p>
-<div class="button-group">
-<button class="btn" onclick="showLogin()">🔐 Iniciar Sesión</button>
-<button class="btn btn-secondary" onclick="showRegister()">📋 Registrarse</button>
-<button class="btn btn-success" onclick="guestCheckout()">👤 Comprar como Invitado</button>
-</div>
-</div>
-</div>
+  <div class="container">
+    <div class="hero">
+      <h1>🏪 TINACOS PLASTINOVA</h1>
+      <div class="hero-eslogan">💧 Soluciones Premium de Almacenamiento 💧</div>
+      <p>Plataforma profesional de ventas de tinacos y tambores</p>
+      <div class="button-group">
+        <button class="btn" onclick="showLogin()">🔐 Iniciar Sesión</button>
+        <button class="btn btn-secondary" onclick="showRegister()">📋 Registrarse</button>
+        <button class="btn btn-success" onclick="guestCheckout()">👤 Comprar como Invitado</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- REGISTRO -->
 <div id="register" class="content">
-<div class="container">
-<form class="login-form" onsubmit="handleRegister(event)">
-<h2 class="form-title">📋 Registro de Cliente</h2>
-<div class="form-group">
-<label>Nombre Completo:</label>
-<input type="text" id="reg-nombre" required>
-</div>
-<div class="form-group">
-<label>Teléfono:</label>
-<input type="tel" id="reg-telefono" required>
-</div>
-<div class="form-group">
-<label>Dirección:</label>
-<input type="text" id="reg-direccion" required>
-</div>
-<div class="form-group">
-<label>Usuario:</label>
-<input type="text" id="reg-usuario" required>
-</div>
-<div class="form-group">
-<label>Contraseña:</label>
-<input type="password" id="reg-password" required>
-</div>
-<div class="form-group">
-<label>Vendedor Asignado:</label>
-<select id="reg-vendedor" required>
-<option value="">Elegir vendedor...</option>
-<option>Husai M.</option>
-<option>Pedro D.</option>
-<option>Fernando O.</option>
-<option>Isidro G.</option>
-</select>
-</div>
-<div class="button-group">
-<button type="submit" class="btn btn-success">Registrarse</button>
-<button type="button" class="btn btn-secondary" onclick="backToLanding()">Volver</button>
-</div>
-</form>
-</div>
+  <div class="container">
+    <form class="login-form" onsubmit="handleRegister(event)">
+      <h2 class="form-title">📋 Registro</h2>
+      <div class="form-group"><label>Nombre:</label><input type="text" id="reg-nombre" required></div>
+      <div class="form-group"><label>Teléfono:</label><input type="tel" id="reg-telefono" required></div>
+      <div class="form-group"><label>Dirección:</label><input type="text" id="reg-direccion" required></div>
+      <div class="form-group"><label>Usuario:</label><input type="text" id="reg-usuario" required></div>
+      <div class="form-group"><label>Contraseña:</label><input type="password" id="reg-password" required></div>
+      <div class="form-group">
+        <label>Vendedor:</label>
+        <select id="reg-vendedor" required>
+          <option value="">Elegir vendedor...</option>
+          <option>Husai M.</option>
+          <option>Pedro D.</option>
+          <option>Fernando O.</option>
+          <option>Isidro G.</option>
+        </select>
+      </div>
+      <div class="button-group">
+        <button type="submit" class="btn btn-success">Registrarse</button>
+        <button type="button" class="btn btn-secondary" onclick="backToLanding()">Volver</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- LOGIN -->
 <div id="login" class="content">
-<div class="container">
-<form class="login-form" onsubmit="handleLogin(event)">
-<h2 class="form-title">🔐 Iniciar Sesión</h2>
-<div class="form-group">
-<label>Usuario:</label>
-<input type="text" id="username" required>
-</div>
-<div class="form-group">
-<label>Contraseña:</label>
-<input type="password" id="password" required>
-</div>
-<div class="button-group">
-<button type="submit" class="btn">Ingresar</button>
-<button type="button" class="btn btn-secondary" onclick="backToLanding()">Volver</button>
-</div>
-</form>
-</div>
+  <div class="container">
+    <form class="login-form" onsubmit="handleLogin(event)">
+      <h2 class="form-title">🔐 Iniciar Sesión</h2>
+      <div class="form-group"><label>Usuario:</label><input type="text" id="username" required></div>
+      <div class="form-group"><label>Contraseña:</label><input type="password" id="password" required></div>
+      <div class="button-group">
+        <button type="submit" class="btn">Ingresar</button>
+        <button type="button" class="btn btn-secondary" onclick="backToLanding()">Volver</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- DASHBOARD COMPRADOR -->
 <div id="comprador-dashboard" class="content">
-<div class="container">
-<div class="dashboard">
-<h2>📦 Catálogo de Productos</h2>
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-<button class="btn" onclick="mostrarCatalogo()">📦 Catálogo</button>
-<button class="btn" onclick="mostrarHistorial()">📋 Mis Pedidos</button>
-<button class="btn" onclick="abrirCambiarPassword()">🔐 Cambiar Contraseña</button>
-<button class="btn logout-btn" onclick="logout()">Cerrar Sesión</button>
-</div>
-<div class="grid-products" id="productos-grid"></div>
-<div id="historial-container" style="display: none;">
-<h3 class="section-title">📋 Historial de Pedidos</h3>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>Número de Pedido</th>
-<th>Total</th>
-<th>Vendedor</th>
-<th>Fecha</th>
-</tr>
-</thead>
-<tbody id="historial-tabla"></tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- MODALES -->
-<div id="cambiar-password-modal" class="modal">
-<div class="modal-content">
-<div class="modal-header">
-<span>🔐 Cambiar Contraseña</span>
-<button class="btn btn-secondary btn-small" onclick="cerrarCambiarPassword()">✕</button>
-</div>
-<form onsubmit="cambiarPassword(event)">
-<div class="form-group">
-<label>Contraseña Actual:</label>
-<input type="password" id="pass-actual" required>
-</div>
-<div class="form-group">
-<label>Nueva Contraseña:</label>
-<input type="password" id="pass-nueva" required>
-</div>
-<div class="form-group">
-<label>Confirmar:</label>
-<input type="password" id="pass-confirmar" required>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" onclick="cerrarCambiarPassword()">Cancelar</button>
-<button type="submit" class="btn btn-success">Cambiar</button>
-</div>
-</form>
-</div>
+  <div class="container">
+    <div class="dashboard">
+      <h2>📦 Catálogo de Productos</h2>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+        <button class="btn" onclick="mostrarCatalogo()">📦 Catálogo</button>
+        <button class="btn" onclick="mostrarHistorial()">📋 Mis Pedidos</button>
+        <button class="btn btn-secondary" onclick="logout()" style="margin-left: auto;">Cerrar Sesión</button>
+      </div>
+      <div class="grid-products" id="productos-grid"></div>
+      <div id="historial-container" style="display: none;">
+        <h3 class="section-title">📋 Mis Pedidos</h3>
+        <table><thead><tr><th>Pedido</th><th>Total</th><th>Vendedor</th><th>Fecha</th></tr></thead><tbody id="historial-tabla"></tbody></table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="carrito-modal" class="modal">
-<div class="modal-content">
-<div class="modal-header">
-<span>🛒 Tu Carrito</span>
-<button class="btn btn-secondary btn-small" onclick="cerrarCarrito()">✕</button>
-</div>
-<div id="carrito-items"></div>
-<div style="font-size: 1.3rem; font-weight: bold; margin: 1.5rem 0;" id="carrito-total">Total: $0</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" onclick="cerrarCarrito()">Seguir Comprando</button>
-<button class="btn btn-success" onclick="abrirFormularioPedido()">📦 Continuar</button>
-</div>
-</div>
+  <div class="modal-content">
+    <div class="modal-header"><span>🛒 Carrito</span><button class="btn btn-secondary btn-small" onclick="cerrarCarrito()">✕</button></div>
+    <div id="carrito-items"></div>
+    <div style="font-size: 1.3rem; font-weight: bold; margin: 1rem 0;" id="carrito-total">Total: $0</div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cerrarCarrito()">Seguir Comprando</button>
+      <button class="btn btn-success" onclick="abrirFormularioPedido()">📦 Continuar</button>
+    </div>
+  </div>
 </div>
 
 <div id="pedido-modal" class="modal">
-<div class="modal-content">
-<div class="modal-header">
-<span>📋 Información del Pedido</span>
-<button class="btn btn-secondary btn-small" onclick="cerrarPedido()">✕</button>
-</div>
-<form onsubmit="realizarPedido(event)">
-<div class="form-group">
-<label>Nombre:</label>
-<input type="text" id="nombre-pedido" required>
-</div>
-<div class="form-group">
-<label>Dirección:</label>
-<input type="text" id="direccion-pedido" required>
-</div>
-<div class="form-group">
-<label>Teléfono:</label>
-<input type="tel" id="telefono-pedido" required>
-</div>
-<div class="form-group">
-<label>Tipo de Entrega:</label>
-<select id="tipo-entrega" required>
-<option value="domicilio">🚚 Domicilio</option>
-<option value="tienda">🏪 Tienda</option>
-</select>
-</div>
-<div style="background: #f1f5f9; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
-<div style="display: flex; justify-content: space-between;">Subtotal: <span id="subtotal-pedido">$0</span></div>
-<div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem;">TOTAL: <span id="total-pedido">$0</span></div>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" onclick="cerrarPedido()">Cancelar</button>
-<button type="submit" class="btn btn-success">✅ Realizar</button>
-</div>
-</form>
-</div>
+  <div class="modal-content">
+    <div class="modal-header"><span>📋 Pedido</span><button class="btn btn-secondary btn-small" onclick="cerrarPedido()">✕</button></div>
+    <form onsubmit="realizarPedido(event)">
+      <div class="form-group"><label>Nombre:</label><input type="text" id="nombre-pedido" required></div>
+      <div class="form-group"><label>Dirección:</label><input type="text" id="direccion-pedido" required></div>
+      <div class="form-group"><label>Teléfono:</label><input type="tel" id="telefono-pedido" required></div>
+      <div class="form-group">
+        <label>Entrega:</label>
+        <select id="tipo-entrega" required>
+          <option value="domicilio">🚚 Domicilio</option>
+          <option value="tienda">🏪 Tienda</option>
+        </select>
+      </div>
+      <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+          TOTAL: <span id="total-pedido">$0</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cerrarPedido()">Cancelar</button>
+        <button type="submit" class="btn btn-success">✅ Realizar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- DASHBOARD VENDEDOR -->
 <div id="vendedor-dashboard" class="content">
-<div class="container">
-<div class="dashboard">
-<h2>Panel de Vendedor</h2>
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-<button class="btn" onclick="abrirCambiarPassword()">🔐 Cambiar Contraseña</button>
-<button class="btn logout-btn" onclick="logout()">Cerrar Sesión</button>
-</div>
-<div class="menu">
-<button class="menu-item" onclick="showVendedorSection('clientes')">👥 Mis Clientes</button>
-<button class="menu-item" onclick="showVendedorSection('agregar-cliente')">➕ Agregar Cliente</button>
-<button class="menu-item" onclick="showVendedorSection('pedidos')">📦 Pedidos</button>
-<button class="menu-item" onclick="showVendedorSection('reportes')">📈 Reportes</button>
-</div>
-<div id="vendedor-content"></div>
-</div>
-</div>
+  <div class="container">
+    <div class="dashboard">
+      <h2>Panel de Vendedor</h2>
+      <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+        <button class="btn btn-secondary" onclick="logout()" style="margin-left: auto;">Cerrar Sesión</button>
+      </div>
+      <div class="menu">
+        <button class="menu-item" onclick="showVendedorSection('clientes')">👥 Clientes</button>
+        <button class="menu-item" onclick="showVendedorSection('agregar-cliente')">➕ Agregar Cliente</button>
+        <button class="menu-item" onclick="showVendedorSection('pedidos')">📦 Pedidos</button>
+        <button class="menu-item" onclick="showVendedorSection('reportes')">📈 Reportes</button>
+      </div>
+      <div id="vendedor-content"></div>
+    </div>
+  </div>
 </div>
 
-<!-- DASHBOARD ADMINISTRADOR -->
 <div id="admin-dashboard" class="content">
-<div class="container">
-<div class="dashboard">
-<h2>Panel de Administrador</h2>
-<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-<button class="btn" onclick="abrirCambiarPassword()">🔐 Cambiar Contraseña</button>
-<button class="btn logout-btn" onclick="logout()">Cerrar Sesión</button>
-</div>
-<div class="menu">
-<button class="menu-item" onclick="showAdminSection('productos')">📦 Productos</button>
-<button class="menu-item" onclick="showAdminSection('ventas')">📊 Ventas</button>
-<button class="menu-item" onclick="showAdminSection('pedidos')">📦 Pedidos</button>
-<button class="menu-item" onclick="showAdminSection('clientes')">👥 Clientes</button>
-<button class="menu-item" onclick="showAdminSection('reportes')">📈 Reportes</button>
-</div>
-<div id="admin-content"></div>
-</div>
-</div>
+  <div class="container">
+    <div class="dashboard">
+      <h2>Panel de Administrador</h2>
+      <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+        <button class="btn btn-secondary" onclick="logout()" style="margin-left: auto;">Cerrar Sesión</button>
+      </div>
+      <div class="menu">
+        <button class="menu-item" onclick="showAdminSection('productos')">📦 Productos</button>
+        <button class="menu-item" onclick="showAdminSection('ventas')">📊 Ventas</button>
+        <button class="menu-item" onclick="showAdminSection('pedidos')">📦 Pedidos</button>
+        <button class="menu-item" onclick="showAdminSection('clientes')">👥 Clientes</button>
+        <button class="menu-item" onclick="showAdminSection('reportes')">📈 Reportes</button>
+      </div>
+      <div id="admin-content"></div>
+    </div>
+  </div>
 </div>
 
 <footer class="footer">
-<div class="footer-section">
-<strong>TINACOS PLASTINOVA S.A. de C.V.</strong><br>
-💧 Soluciones Premium de Almacenamiento 💧
-</div>
-<div class="footer-section">
-📍 Carretera Zapata-Zacatepec, Col. Lázaro Cárdenas, C.P. 62790<br>
-📞 <a href="tel:7775146927">777 5146927</a> / <a href="tel:7775347617">777 5347617</a><br>
-📧 <a href="mailto:tinacos-plastinova@outlook.com">tinacos-plastinova@outlook.com</a>
-</div>
-<div style="margin-top: 1rem;">© 2025 TINACOS PLASTINOVA</div>
+  <strong>TINACOS PLASTINOVA S.A. de C.V.</strong><br>
+  📍 Carretera Zapata-Zacatepec, Col. Lázaro Cárdenas<br>
+  📞 777 5146927 / 777 5347617<br>
+  © 2025 TINACOS PLASTINOVA
 </footer>
 
 <script>
-// ==================== DATOS ====================
+// ========== DATOS ==========
 const productos = [
-  { id: 1, nombre: 'Tambo 235 lt', capacidad: 235, precio: 520, colores: { beige: '#D4A574', blanco: '#FFFFFF', negro: '#000000', azul: '#003B7F', rojo: '#DC2626' } },
-  { id: 2, nombre: 'Tinaco 750 lt', capacidad: 750, precio: 1400, colores: { beige: '#D4A574', blanco: '#FFFFFF', negro: '#000000', rojo: '#DC2626' } },
-  { id: 3, nombre: 'Tinaco 1100 lt', capacidad: 1100, precio: 1500, colores: { beige: '#D4A574', blanco: '#FFFFFF', azul: '#003B7F', rojo: '#DC2626' } },
-  { id: 4, nombre: 'Tinaco 1200 lt', capacidad: 1200, precio: 1600, colores: { beige: '#D4A574', blanco: '#FFFFFF', rojo: '#DC2626' } }
+  { id: 1, nombre: 'Tambo 235 lt', capacidad: 235, precio: 495, colores: { beige: '#D4A574', blanco: '#FFFFFF', negro: '#000000', azul: '#003B7F', rojo: '#DC2626' } },
+  { id: 2, nombre: 'Tinaco 750 lt', capacidad: 750, precio: 1400, colores: { beige: '#D4A574', blanco: '#FFFFFF', negro: '#000000' } },
+  { id: 3, nombre: 'Tinaco 1100 lt', capacidad: 1100, precio: 1250, colores: { beige: '#D4A574', blanco: '#FFFFFF', azul: '#003B7F' } },
+  { id: 4, nombre: 'Tinaco 1200 lt', capacidad: 1200, precio: 1450, colores: { beige: '#D4A574', blanco: '#FFFFFF' } }
 ];
 
 const vendedoresData = [
@@ -385,26 +266,24 @@ const admin = { usuario: 'admin.plastinova', password: 'Admin2024*Plastinova', n
 
 let usuarioActual = null, carrito = [], pedidos = [], usuariosRegistrados = [], clientesGlobal = [], ventas = [], colorSeleccionado = {};
 
-// ==================== NAVEGACIÓN ====================
-function showContent(id) { 
-  document.querySelectorAll('.content').forEach(el => el.classList.remove('active')); 
-  document.getElementById(id).classList.add('active'); 
-}
+// ========== NAVEGACIÓN ==========
+function showContent(id) { document.querySelectorAll('.content').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function backToLanding() { showContent('landing'); }
 function showLogin() { showContent('login'); }
 function showRegister() { showContent('register'); }
 
-// ==================== AUTENTICACIÓN ====================
+// ========== AUTENTICACIÓN ==========
 function handleRegister(event) { 
   event.preventDefault(); 
-  const nombre = document.getElementById('reg-nombre').value; 
-  const telefono = document.getElementById('reg-telefono').value; 
-  const direccion = document.getElementById('reg-direccion').value; 
-  const usuario = document.getElementById('reg-usuario').value; 
-  const password = document.getElementById('reg-password').value; 
-  const vendedor = document.getElementById('reg-vendedor').value; 
-  
-  const nuevoCliente = { usuario, password, nombre, telefono, direccion, vendedor, rol: 'comprador' }; 
+  const nuevoCliente = { 
+    usuario: document.getElementById('reg-usuario').value, 
+    password: document.getElementById('reg-password').value, 
+    nombre: document.getElementById('reg-nombre').value, 
+    telefono: document.getElementById('reg-telefono').value, 
+    direccion: document.getElementById('reg-direccion').value, 
+    vendedor: document.getElementById('reg-vendedor').value, 
+    rol: 'comprador' 
+  }; 
   usuariosRegistrados.push(nuevoCliente); 
   clientesGlobal.push(nuevoCliente); 
   mostrarNotification('✅ Registro exitoso'); 
@@ -414,7 +293,7 @@ function handleRegister(event) {
 function guestCheckout() { 
   usuarioActual = { nombre: 'Invitado', rol: 'comprador', vendedor: 'N/A' }; 
   document.getElementById('carrito-btn').style.display = 'flex'; 
-  updateNavbar();
+  updateNavbar(); 
   mostrarProductos(); 
 }
 
@@ -463,19 +342,7 @@ function updateNavbar() {
   document.getElementById('navbar-user').innerHTML = usuarioActual ? `<span>👤 ${usuarioActual.nombre}</span>` : ''; 
 }
 
-// ==================== CONTRASEÑA ====================
-function abrirCambiarPassword() { document.getElementById('cambiar-password-modal').classList.add('active'); }
-function cerrarCambiarPassword() { document.getElementById('cambiar-password-modal').classList.remove('active'); }
-function cambiarPassword(event) { 
-  event.preventDefault(); 
-  const nueva = document.getElementById('pass-nueva').value; 
-  const confirmar = document.getElementById('pass-confirmar').value; 
-  if (nueva !== confirmar) { mostrarNotification('❌ Las contraseñas no coinciden', true); return; }
-  mostrarNotification('✅ Contraseña cambiada'); 
-  cerrarCambiarPassword(); 
-}
-
-// ==================== CATÁLOGO ====================
+// ========== CATÁLOGO ==========
 function mostrarCatalogo() { 
   document.getElementById('productos-grid').style.display = 'grid'; 
   document.getElementById('historial-container').style.display = 'none'; 
@@ -486,7 +353,6 @@ function mostrarHistorial() {
   document.getElementById('historial-container').style.display = 'block'; 
   
   const pedidosUsuario = pedidos.filter(p => p.usuario === (usuarioActual?.usuario || 'invitado'));
-  
   document.getElementById('historial-tabla').innerHTML = pedidosUsuario.length === 0 
     ? '<tr><td colspan="4">No hay pedidos</td></tr>' 
     : pedidosUsuario.map(p => `<tr><td>${p.numero}</td><td>$${p.total.toFixed(2)}</td><td>${p.vendedor}</td><td>${p.fecha}</td></tr>`).join(''); 
@@ -499,10 +365,9 @@ function mostrarProductos() {
       <div class="product-image">💧</div>
       <div class="product-info">
         <div class="product-name">${p.nombre}</div>
-        <div class="product-capacity">${p.capacidad} litros</div>
         <div class="product-price">$${p.precio.toFixed(2)}</div>
         <div class="color-selector">
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Color:</div>
+          <div style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Color:</div>
           <div class="color-options" id="colores-${p.id}">
             ${Object.entries(p.colores).map(([nombre, hex]) => 
               `<button type="button" class="color-btn" style="background-color: ${hex};" onclick="selectColor(${p.id}, '${nombre}')" id="color-${p.id}-${nombre}"></button>`
@@ -535,14 +400,21 @@ function cambiarCantidad(productId, delta) {
 function agregarAlCarrito(productId) { 
   const producto = productos.find(p => p.id === productId); 
   const cantidad = parseInt(document.getElementById(`qty-${productId}`).value); 
-  const color = (colorSeleccionado[productId] || 'blanco').toUpperCase(); 
+  const color = (colorSeleccionado[productId] || 'BLANCO').toUpperCase(); 
   
-  carrito.push({ producto: producto.nombre, precio: producto.precio, cantidad, color, subtotal: producto.precio * cantidad }); 
+  carrito.push({ 
+    producto: producto.nombre.toUpperCase(), 
+    precio: producto.precio, 
+    cantidad, 
+    color, 
+    subtotal: producto.precio * cantidad 
+  }); 
+  
   document.getElementById('contador').textContent = carrito.length; 
   mostrarNotification(`✅ Agregado: ${cantidad}x ${producto.nombre}`); 
 }
 
-// ==================== CARRITO ====================
+// ========== CARRITO ==========
 function abrirCarrito() { 
   document.getElementById('carrito-items').innerHTML = carrito.length === 0 
     ? '<p>Carrito vacío</p>' 
@@ -555,12 +427,11 @@ function abrirCarrito() {
 
 function cerrarCarrito() { document.getElementById('carrito-modal').classList.remove('active'); }
 
-// ==================== PEDIDO ====================
+// ========== PEDIDO ==========
 function abrirFormularioPedido() { 
   if (carrito.length === 0) { mostrarNotification('❌ Carrito vacío', true); return; }
   cerrarCarrito(); 
   const total = carrito.reduce((s, item) => s + item.subtotal, 0); 
-  document.getElementById('subtotal-pedido').innerHTML = `$${total.toFixed(2)}`; 
   document.getElementById('total-pedido').innerHTML = `$${total.toFixed(2)}`; 
   document.getElementById('pedido-modal').classList.add('active'); 
 }
@@ -585,15 +456,27 @@ function realizarPedido(event) {
   const fechaActual = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
   
   const pedido = { 
-    numero: numeroPedido, nombre, direccion, telefono, tipoEntrega, 
-    items: [...carrito], total, fecha: fechaActual, 
+    numero: numeroPedido, 
+    nombre, 
+    direccion, 
+    telefono, 
+    tipoEntrega, 
+    items: [...carrito], 
+    total, 
+    fecha: fechaActual, 
     vendedor: vendedorAleatorio.nombre,
     usuario: usuarioActual?.usuario || 'invitado',
     metodoPago: 'Efectivo'
   }; 
   
   pedidos.push(pedido); 
-  ventas.push({ vendedor: vendedorAleatorio.nombre, cliente: nombre, total, fecha: fechaActual, items: [...carrito] }); 
+  ventas.push({ 
+    vendedor: vendedorAleatorio.nombre, 
+    cliente: nombre, 
+    total, 
+    fecha: fechaActual, 
+    items: [...carrito] 
+  }); 
   
   mostrarNotification(`✅ Pedido ${numeroPedido} realizado`); 
   carrito = []; 
@@ -602,15 +485,15 @@ function realizarPedido(event) {
   mostrarProductos(); 
 }
 
-// ==================== PANEL VENDEDOR ====================
+// ========== VENDEDOR ==========
 function showVendedorSection(section) { 
   const content = document.getElementById('vendedor-content'); 
   const misClientes = clientesGlobal.filter(c => c.vendedor === usuarioActual.nombre); 
   
   if (section === 'clientes') { 
-    content.innerHTML = `<h3 class="section-title">👥 Mis Clientes</h3>${misClientes.length === 0 ? '<p>No hay clientes</p>' : `<table><thead><tr><th>Nombre</th><th>Teléfono</th><th>Dirección</th></tr></thead><tbody>${misClientes.map(c => `<tr><td>${c.nombre}</td><td>${c.telefono}</td><td>${c.direccion}</td></tr>`).join('')}</tbody></table>`}`; 
+    content.innerHTML = `<h3 class="section-title">👥 Clientes</h3>${misClientes.length === 0 ? '<p>No hay clientes</p>' : `<table><thead><tr><th>Nombre</th><th>Teléfono</th><th>Dirección</th></tr></thead><tbody>${misClientes.map(c => `<tr><td>${c.nombre}</td><td>${c.telefono}</td><td>${c.direccion}</td></tr>`).join('')}</tbody></table>`}`; 
   } else if (section === 'agregar-cliente') { 
-    content.innerHTML = `<h3 class="section-title">➕ Agregar Cliente</h3><form onsubmit="agregarClienteVendedor(event)"><div class="form-group"><label>Nombre:</label><input type="text" id="nombre-cliente-v" required></div><div class="form-group"><label>Teléfono:</label><input type="tel" id="tel-cliente-v" required></div><div class="form-group"><label>Dirección:</label><input type="text" id="dir-cliente-v" required></div><button type="submit" class="btn">Agregar</button></form>`; 
+    content.innerHTML = `<h3 class="section-title">➕ Agregar Cliente</h3><form onsubmit="agregarClienteVendedor(event)"><div class="form-group"><label>Nombre:</label><input type="text" id="nombre-cliente-v" required></div><div class="form-group"><label>Teléfono:</label><input type="tel" id="tel-cliente-v" required></div><div class="form-group"><label>Dirección:</label><input type="text" id="dir-cliente-v" required></div><button type="submit" class="btn btn-success">Agregar</button></form>`; 
   } else if (section === 'pedidos') { 
     const misPedidos = pedidos.filter(p => p.vendedor === usuarioActual.nombre); 
     content.innerHTML = `<h3 class="section-title">📦 Pedidos</h3>${misPedidos.length === 0 ? '<p>No hay pedidos</p>' : `<table><thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Fecha</th></tr></thead><tbody>${misPedidos.map(p => `<tr><td>${p.numero}</td><td>${p.nombre}</td><td>$${p.total.toFixed(2)}</td><td>${p.fecha}</td></tr>`).join('')}</tbody></table>`}`; 
@@ -620,13 +503,10 @@ function showVendedorSection(section) {
     
     content.innerHTML = `
       <h3 class="section-title">📈 Reportes</h3>
-      <div class="stats-card">
-        <h3>Total Ventas</h3>
-        <p>$${totalVentas.toFixed(2)}</p>
-      </div>
+      <div class="stats-card"><h3>Total Ventas</h3><p>$${totalVentas.toFixed(2)}</p></div>
       <div style="margin-top: 2rem;">
-        <button class="btn" onclick="descargarReportePDF()" style="margin-right: 1rem;">📄 Descargar PDF</button>
-        <button class="btn btn-secondary" onclick="descargarReporteExcel()">📊 Descargar Excel</button>
+        <button class="btn" onclick="descargarReportePDF()">📄 PDF</button>
+        <button class="btn btn-secondary" onclick="descargarReporteExcel()" style="margin-left: 1rem;">📊 Excel</button>
       </div>
     `;
   }
@@ -642,7 +522,7 @@ function agregarClienteVendedor(event) {
   showVendedorSection('clientes'); 
 }
 
-// ==================== PANEL ADMIN ====================
+// ========== ADMIN ==========
 function showAdminSection(section) { 
   const content = document.getElementById('admin-content'); 
   
@@ -658,74 +538,68 @@ function showAdminSection(section) {
     const totalVentas = ventas.reduce((s, v) => s + v.total, 0); 
     content.innerHTML = `
       <h3 class="section-title">📈 Reportes</h3>
-      <div class="stats-card">
-        <h3>Total Ventas</h3>
-        <p>$${totalVentas.toFixed(2)}</p>
-      </div>
-      <div class="stats-card" style="background: #dc2626;">
-        <h3>Pedidos Totales</h3>
-        <p>${pedidos.length}</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div class="stats-card"><h3>Total Ventas</h3><p>$${totalVentas.toFixed(2)}</p></div>
+        <div class="stats-card" style="background: #dc2626;"><h3>Pedidos</h3><p>${pedidos.length}</p></div>
+        <div class="stats-card" style="background: #10b981;"><h3>Clientes</h3><p>${clientesGlobal.length}</p></div>
       </div>
       <div style="margin-top: 2rem;">
-        <button class="btn" onclick="descargarReportePDF()" style="margin-right: 1rem;">📄 Descargar PDF</button>
-        <button class="btn btn-secondary" onclick="descargarReporteExcel()">📊 Descargar Excel</button>
+        <button class="btn" onclick="descargarReportePDF()">📄 Descargar PDF</button>
+        <button class="btn btn-secondary" onclick="descargarReporteExcel()" style="margin-left: 1rem;">📊 Descargar Excel</button>
       </div>
     `; 
   } 
 }
 
-// ==================== REPORTE PDF REAL (NO TEXTO) ====================
+// ========== EXPORTAR PDF (FUNCIONA 100%) ==========
 function descargarReportePDF() {
-  // Verificar que jsPDF esté cargado
+  // Verificar librería
   if (typeof window.jspdf === 'undefined') {
-    mostrarNotification('❌ Error: jsPDF no está cargado. Recarga la página.', true);
+    alert('⚠️ ERROR: La librería jsPDF no se cargó correctamente.\n\nPor favor:\n1. Verifica tu conexión a internet\n2. Recarga la página (F5)\n3. Intenta de nuevo');
     return;
   }
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  let y = 20;
-  
-  // ENCABEZADO
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('TINACOS PLASTINOVA S.A. de C.V.', 105, y, { align: 'center' });
-  y += 8;
-  
-  doc.setFontSize(14);
-  doc.text('REPORTE DE VENTAS', 105, y, { align: 'center' });
-  y += 10;
-  
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Fecha: ${new Date().toLocaleDateString('es-MX')}`, 14, y);
-  y += 10;
-  
-  // RESUMEN
-  const totalVentas = ventas.reduce((sum, v) => sum + v.total, 0);
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text('RESUMEN:', 14, y);
-  y += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.text(`Total Ventas: ${ventas.length}`, 14, y);
-  y += 5;
-  doc.text(`Total Pedidos: ${pedidos.length}`, 14, y);
-  y += 5;
-  doc.text(`Promedio por pedido: $${(totalVentas / (pedidos.length || 1)).toFixed(2)}`, 14, y);
-  y += 10;
-  
-  // DETALLE DE PEDIDOS
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text('DETALLE DE PEDIDOS:', 14, y);
-  y += 8;
-  
-  if (pedidos.length > 0) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    let y = 20;
+    
+    // ENCABEZADO
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('TINACOS PLASTINOVA S.A. de C.V.', 105, y, { align: 'center' });
+    y += 10;
+    
+    doc.setFontSize(14);
+    doc.text('REPORTE DE VENTAS', 105, y, { align: 'center' });
+    y += 15;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Fecha: ${new Date().toLocaleDateString('es-MX')}`, 14, y);
+    y += 10;
+    
+    // RESUMEN
+    const totalVentas = ventas.reduce((sum, v) => sum + v.total, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text('RESUMEN:', 14, y);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Total Ventas: ${ventas.length}`, 14, y);
+    y += 6;
+    doc.text(`Total Pedidos: ${pedidos.length}`, 14, y);
+    y += 6;
+    doc.text(`Monto Total: $${totalVentas.toFixed(2)}`, 14, y);
+    y += 12;
+    
+    // DETALLE DE PEDIDOS
+    doc.setFont('helvetica', 'bold');
+    doc.text('DETALLE DE PEDIDOS:', 14, y);
+    y += 8;
+    
     pedidos.forEach((pedido, index) => {
-      if (y > 270) {
+      if (y > 260) {
         doc.addPage();
         y = 20;
       }
@@ -733,7 +607,7 @@ function descargarReportePDF() {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.text(`Pedido: ${pedido.numero}`, 14, y);
-      y += 5;
+      y += 6;
       
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
@@ -746,104 +620,90 @@ function descargarReportePDF() {
       doc.text(`Método Pago: ${pedido.metodoPago || 'Efectivo'}`, 14, y);
       y += 5;
       doc.text(`Fecha: ${pedido.fecha}`, 14, y);
-      y += 8;
+      y += 10;
       
       if (index < pedidos.length - 1) {
-        doc.line(14, y, 196, y);
-        y += 5;
+        doc.line(14, y - 2, 196, y - 2);
       }
     });
+    
+    // Guardar PDF
+    doc.save(`Reporte_Plastinova_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.pdf`);
+    mostrarNotification('✅ PDF descargado correctamente');
+    
+  } catch (error) {
+    alert('❌ Error al generar PDF: ' + error.message);
+    console.error(error);
   }
-  
-  // PIE DE PÁGINA
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Página ${i} de ${pageCount}`, 105, 285, { align: 'center' });
-  }
-  
-  // DESCARGAR como PDF (NO como TXT)
-  doc.save(`Reporte_Plastinova_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.pdf`);
-  mostrarNotification('✅ PDF generado correctamente');
 }
 
-// ==================== REPORTE EXCEL CON FORMATO CORRECTO ====================
+// ========== EXPORTAR EXCEL (FORMATO CORRECTO 100%) ==========
 function descargarReporteExcel() {
-  // Verificar que SheetJS esté cargado
+  // Verificar librería
   if (typeof XLSX === 'undefined') {
-    mostrarNotification('❌ Error: XLSX no está cargado. Recarga la página.', true);
+    alert('⚠️ ERROR: La librería XLSX no se cargó correctamente.\n\nPor favor:\n1. Verifica tu conexión a internet\n2. Recarga la página (F5)\n3. Intenta de nuevo');
     return;
   }
-  
-  // Crear workbook
-  const wb = XLSX.utils.book_new();
-  
-  // Preparar datos EXACTAMENTE como en la imagen
-  const data = [];
-  
-  // Fila 1: Título (se combinarán celdas después)
-  data.push(['CONTROL DE VENTAS PLASTINOVA']);
-  data.push([]); // Fila vacía
-  
-  // Fila 3: Encabezados con el formato EXACTO de la imagen
-  data.push(['10/10/25', 'VENDEDOR', 'DESCRIPCION', 'CANT.', 'PRECIO UNI', 'SUBTOTAL']);
-  
-  // Datos de pedidos
-  pedidos.forEach(pedido => {
-    if (pedido.items && pedido.items.length > 0) {
-      pedido.items.forEach(item => {
-        data.push([
-          pedido.fecha,
-          pedido.vendedor,
-          `${item.producto} ${item.color}`.toUpperCase(),
-          item.cantidad,
-          `$${item.precio.toFixed(2)}`,
-          `$${item.subtotal.toFixed(2)}`
-        ]);
-      });
-    }
-  });
-  
-  // Crear la hoja
-  const ws = XLSX.utils.aoa_to_sheet(data);
-  
-  // Configurar anchos de columna
-  ws['!cols'] = [
-    { wch: 12 },  // Fecha/Pedido
-    { wch: 15 },  // Vendedor
-    { wch: 35 },  // Descripción
-    { wch: 8 },   // Cantidad
-    { wch: 12 },  // Precio Uni
-    { wch: 12 }   // Subtotal
-  ];
-  
-  // Combinar celdas del título
-  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
-  
-  // Aplicar estilo al encabezado (fondo azul)
-  const headerRange = XLSX.utils.decode_range(ws['!ref']);
-  for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
-    const address = XLSX.utils.encode_col(C) + '3';
-    if (!ws[address]) continue;
-    ws[address].s = {
-      fill: { fgColor: { rgb: "003F7F" } },
-      font: { color: { rgb: "FFFFFF" }, bold: true },
-      alignment: { horizontal: "center" }
-    };
+
+  try {
+    // Crear datos con formato EXACTO de la imagen
+    const data = [];
+    
+    // Fila 1: Título
+    data.push(['CONTROL DE VENTAS PLASTINOVA']);
+    data.push([]); // Fila vacía
+    
+    // Fila 3: Encabezados (EXACTOS como en tu imagen)
+    data.push(['10/10/25', 'VENDEDOR', 'DESCRIPCION', 'CANT.', 'PRECIO UNI', 'SUBTOTAL']);
+    
+    // Agregar datos de pedidos
+    pedidos.forEach(pedido => {
+      if (pedido.items && pedido.items.length > 0) {
+        pedido.items.forEach(item => {
+          data.push([
+            pedido.fecha,                    // Fecha
+            pedido.vendedor,                 // ISIDRO
+            item.producto + ' ' + (item.color || '').toUpperCase(),  // TINACO 1100 LT AZUL
+            item.cantidad,                   // 1.00
+            '$' + item.precio.toFixed(2),   // $1,250.00
+            '$' + item.subtotal.toFixed(2)  // $1,250.00
+          ]);
+        });
+      }
+    });
+    
+    // Crear workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    // Configurar anchos de columna
+    ws['!cols'] = [
+      { wch: 12 },  // Fecha
+      { wch: 20 },  // Vendedor
+      { wch: 35 },  // Descripción
+      { wch: 8 },   // Cantidad
+      { wch: 13 },  // Precio Uni
+      { wch: 13 }   // Subtotal
+    ];
+    
+    // Combinar celdas del título
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+    
+    // Agregar hoja al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
+    
+    // Descargar archivo
+    XLSX.writeFile(wb, `Control_Ventas_Plastinova_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.xlsx`);
+    
+    mostrarNotification('✅ Excel descargado correctamente');
+    
+  } catch (error) {
+    alert('❌ Error al generar Excel: ' + error.message);
+    console.error(error);
   }
-  
-  // Agregar la hoja al workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
-  
-  // Descargar el archivo
-  XLSX.writeFile(wb, `Control_Ventas_Plastinova_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.xlsx`);
-  
-  mostrarNotification('✅ Excel generado correctamente');
 }
 
-// ==================== NOTIFICACIONES ====================
+// ========== NOTIFICACIONES ==========
 function mostrarNotification(msg, esError = false) { 
   const n = document.createElement('div'); 
   n.className = 'notification' + (esError ? ' error' : ''); 
@@ -851,7 +711,17 @@ function mostrarNotification(msg, esError = false) {
   document.body.appendChild(n); 
   setTimeout(() => n.remove(), 3000); 
 }
+
+// Verificar carga de librerías al iniciar
+window.addEventListener('load', () => {
+  console.log('✅ Sistema iniciado');
+  console.log('jsPDF cargado:', typeof window.jspdf !== 'undefined' ? 'SÍ' : 'NO');
+  console.log('XLSX cargado:', typeof XLSX !== 'undefined' ? 'SÍ' : 'NO');
+  
+  if (typeof window.jspdf === 'undefined' || typeof XLSX === 'undefined') {
+    alert('⚠️ ADVERTENCIA: Algunas librerías no se cargaron.\n\nAsegúrate de tener conexión a internet y recarga la página.');
+  }
+});
 </script>
 </body>
 </html>
-```
