@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -174,8 +175,85 @@
         function agregarClienteVendedor(event) { event.preventDefault(); const nombre = document.getElementById('nombre-cliente-v').value; const telefono = document.getElementById('tel-cliente-v').value; const direccion = document.getElementById('dir-cliente-v').value; clientesGlobal.push({ nombre, telefono, direccion, vendedor: usuarioActual.nombre }); mostrarNotification('✅ Cliente agregado'); showVendedorSection('clientes'); }
         function showAdminSection(section) { const content = document.getElementById('admin-content'); if (section === 'productos') { content.innerHTML = `<h3 class="section-title">📦 Gestión de Productos</h3><div class="table-container"><table><thead><tr><th>Producto</th><th>Precio</th></tr></thead><tbody>${productos.map(p => `<tr><td>${p.nombre}</td><td>$${p.precio}</td></tr>`).join('')}</tbody></table></div>`; } else if (section === 'ventas') { content.innerHTML = `<h3 class="section-title">📊 Ventas</h3><div class="table-container"><table><thead><tr><th>Vendedor</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>${ventas.length === 0 ? '<tr><td colspan="5">No hay ventas</td></tr>' : ventas.map((v, idx) => `<tr><td>${v.vendedor}</td><td>${v.cliente}</td><td>$${v.total}</td><td>${v.fecha}</td><td><button class="btn btn-secondary btn-small" onclick="eliminarVenta(${idx})">❌</button></td></tr>`).join('')}</tbody></table></div>`; } else if (section === 'pedidos') { content.innerHTML = `<h3 class="section-title">📦 Todos los Pedidos</h3><div class="table-container"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th></tr></thead><tbody>${pedidos.map(p => `<tr><td>${p.numero}</td><td>${p.nombre}</td><td>$${p.total}</td></tr>`).join('')}</tbody></table></div>`; } else if (section === 'clientes') { content.innerHTML = `<h3 class="section-title">👥 Clientes</h3><div class="table-container"><table><thead><tr><th>Nombre</th><th>Teléfono</th><th>Vendedor</th></tr></thead><tbody>${clientesGlobal.map(c => `<tr><td>${c.nombre}</td><td>${c.telefono}</td><td>${c.vendedor}</td></tr>`).join('')}</tbody></table></div>`; } else if (section === 'reportes') { const totalVentas = ventas.reduce((s, v) => s + v.total, 0); content.innerHTML = `<h3 class="section-title">📈 Reportes</h3><div style="background: white; padding: 2rem; border-radius: 8px;"><p><strong>Total Ventas:</strong> $${totalVentas}</p><p><strong>Pedidos:</strong> ${pedidos.length}</p><p><strong>Ventas registradas:</strong> ${ventas.length}</p><br><button class="btn" onclick="descargarReportePDF()" style="margin-right: 1rem;">📄 Descargar PDF</button><button class="btn btn-secondary" onclick="descargarReporteExcel()">📊 Descargar Excel</button></div>`; } }
         function eliminarVenta(idx) { if (idx >= 0 && idx < ventas.length) { ventas.splice(idx, 1); mostrarNotification('❌ Venta eliminada'); showAdminSection('ventas'); } }
-        function descargarReportePDF() { if (!window.jspdf) { mostrarNotification('Error al cargar jsPDF', true); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); let y = 15; doc.setFontSize(16); doc.text("CONTROL DE VENTAS PLASTINOVA", 10, y); y += 10; doc.setFontSize(12); doc.setTextColor(20, 80, 180); doc.text("FECHA", 10, y); doc.text("VENDEDOR", 40, y); doc.text("DESCRIPCION", 80, y); doc.text("CANT.", 140, y); doc.text("PRECIO UNI", 157, y); doc.text("SUBTOTAL", 180, y); y += 9; doc.setDrawColor(0,0,0); doc.line(10, y, 200, y); y += 2; doc.setFontSize(10); doc.setTextColor(0,0,0); ventas.forEach((venta) => { venta.items.forEach(item => { if (y > 280) { doc.addPage(); y = 15; } doc.text(venta.fecha, 10, y); doc.text((venta.vendedor || "N/A"), 40, y); doc.text(`${item.producto} ${item.color}`, 80, y); doc.text(String(item.cantidad), 140, y); doc.text(`$${item.precio}`, 157, y); doc.text(`$${item.subtotal}`, 180, y); y += 7; }); }); doc.save("Control_Ventas_Plastinova.pdf"); mostrarNotification('📄 PDF descargado'); }
-        function descargarReporteExcel() { let csvContent = "FECHA,VENDEDOR,DESCRIPCION,CANT.,PRECIO UNI,SUBTOTAL\n"; ventas.forEach(venta => { venta.items.forEach(item => { let row = [venta.fecha, (venta.vendedor || "N/A"), `"${item.producto} ${item.color}"`, item.cantidad, item.precio, item.subtotal]; csvContent += row.join(",") + "\n"; }); }); const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "Control_Ventas_Plastinova.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a); mostrarNotification('📊 Excel descargado'); }
+        
+        function descargarReportePDF() {
+            if (!window.jspdf) {
+                mostrarNotification('❌ jsPDF no cargado. Recarga la página.', true);
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 15;
+            
+            doc.setFontSize(16);
+            doc.text("CONTROL DE VENTAS PLASTINOVA", 105, y, { align: 'center' });
+            y += 10;
+
+            doc.setFillColor(0, 63, 127);
+            doc.rect(10, y, 190, 10, "F");
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont(undefined, 'bold');
+            doc.text("FECHA", 13, y + 7);
+            doc.text("VENDEDOR", 35, y + 7);
+            doc.text("DESCRIPCIÓN", 70, y + 7);
+            doc.text("CANT.", 135, y + 7);
+            doc.text("PRECIO UNI", 157, y + 7);
+            doc.text("SUBTOTAL", 180, y + 7);
+            y += 13;
+
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont(undefined, 'normal');
+
+            ventas.forEach(venta => {
+                if (!venta.items) return;
+                venta.items.forEach(item => {
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    doc.text(venta.fecha || '', 13, y);
+                    doc.text((venta.vendedor || 'N/A').substring(0, 15), 35, y);
+                    doc.text(`${item.producto} ${item.color || ''}`.substring(0, 40), 70, y);
+                    doc.text(String(item.cantidad), 137, y, { align: 'right' });
+                    doc.text(`$${item.precio}`, 157, y, { align: 'right' });
+                    doc.text(`$${item.subtotal}`, 190, y, { align: 'right' });
+                    y += 7;
+                });
+            });
+
+            doc.save("Control_Ventas_Plastinova.pdf");
+            mostrarNotification('📄 PDF generado correctamente');
+        }
+
+        function descargarReporteExcel() {
+            const BOM = "\uFEFF";
+            let csvContent = BOM + "FECHA,VENDEDOR,DESCRIPCIÓN,CANT.,PRECIO UNI,SUBTOTAL\n";
+            ventas.forEach(venta => {
+                if (!venta.items) return;
+                venta.items.forEach(item => {
+                    const row = [
+                        venta.fecha,
+                        (venta.vendedor || 'N/A'),
+                        `"${item.producto} ${item.color || ''}"`,
+                        item.cantidad,
+                        item.precio,
+                        item.subtotal
+                    ];
+                    csvContent += row.join(",") + "\n";
+                });
+            });
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Control_Ventas_Plastinova.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            mostrarNotification('📊 Excel generado correctamente');
+        }
+        
         function mostrarNotification(msg, esError = false) { const n = document.createElement('div'); n.className = 'notification' + (esError ? ' error' : ''); n.textContent = msg; document.body.appendChild(n); setTimeout(() => n.remove(), 3000); }
     </script>
 </body>
